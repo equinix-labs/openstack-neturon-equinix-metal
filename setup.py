@@ -1,21 +1,18 @@
-# setup.py
+import setuptools
 
-from setuptools import setup, find_packages
-
-setup(
+setuptools.setup(
     name='networking-equinix',
     version='0.1',
-    description='Neutron plugin for Equinix Metal integration',
-    packages=find_packages(),
-    entry_points={
-        'neutron.core_plugins': [
-            'equinix = networking_equinix.plugins.equinix_plugin:EquinixPlugin',
-        ],
-    },
+    packages=setuptools.find_packages(),
     install_requires=[
-        'requests',
-        'oslo.config',
-        'oslo.log',
-        # Add other dependencies
+        'requests>=2.20',
+        'oslo.log>=3.36.0',
+        'oslo.utils>=3.36.0',
+        'six>=1.10.0'
     ],
+    entry_points={
+        'neutron.ml2.mechanism_drivers': [
+            'equinix = networking_equinix.plugins.equinix_plugin:EquinixPlugin'
+        ]
+    }
 )

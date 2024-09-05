@@ -1,1 +1,12 @@
-enable_plugin networking-equinix https://github.com/your-repo/networking-equinix.git
+
+[[local|localrc]]
+enable_plugin networking-equinix https://github.com/codinja1188/networking-equinix.git master
+
+# Specify the ML2 plugin and the mechanism driver for Equinix
+Q_PLUGIN=ml2
+Q_ML2_PLUGIN_MECHANISM_DRIVERS=openvswitch,equinix
+
+# Set environment variables for Equinix Metal configuration
+EQUINIX_API_TOKEN=<your_token_here>
+EQUINIX_HOST=<your_host_here>
+EQUINIX_PROJECT_ID=<your_project_id_here>

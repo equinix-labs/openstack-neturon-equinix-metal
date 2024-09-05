@@ -1,9 +1,17 @@
+
+#### 3. **Add `setup.cfg` and `requirements.txt`**
+
+**`setup.cfg`:**
+
+```ini
+# setup.cfg
+
 [metadata]
 name = networking-equinix
 version = 0.1
 description = OpenStack Neutron plugin for Equinix Metal integration
-author = codinja1188
-author_email = kandimalla.vasubabu@gmail.com
+author = Your Name
+author_email = your.email@example.com
 license = Apache License, Version 2.0
 url = https://github.com/codinja1188/networking-equinix
 long_description = file: README.md
