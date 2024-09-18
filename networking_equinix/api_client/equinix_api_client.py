@@ -1,5 +1,3 @@
-# networking_equinix/api_client/equinix_api_client.py
-
 import json
 import requests
 from requests import exceptions as requests_exc
@@ -8,6 +6,7 @@ from oslo_utils import excutils
 from six.moves.urllib import parse
 
 from networking_equinix.common import exceptions as equinix_exc
+from networking_equinix.common.exceptions import EquinixRpcError
 
 LOG = logging.getLogger(__name__)
 
@@ -39,7 +38,7 @@ class EquinixAPIClient:
         :param method: HTTP method to use ('GET', 'POST', etc.)
         :param data: Data to send in the request body (for POST, PUT, etc.)
         :param params: Query parameters to include in the request
-        :return: JSON response from the API
+        :return: JSON response from the API or None for 204 responses
         """
         url = self.url + endpoint
 
@@ -58,21 +57,28 @@ class EquinixAPIClient:
                 raise ValueError("Unsupported HTTP method")
 
         except (requests_exc.ConnectionError, requests_exc.ConnectTimeout, requests_exc.Timeout) as e:
-            error = f"Error during Equinix API request: {str(e)}"
-            LOG.warning(error)
+            error = f"Connection error during Equinix API request: {str(e)}"
+            LOG.error(error)
             raise equinix_exc.EquinixRpcError(msg=error)
         except Exception as e:
             with excutils.save_and_reraise_exception():
-                LOG.warning('Error during processing the Equinix API request: %s', e)
-        
-        if response.status_code != requests.codes.ok:
-            msg = f'Error ({response.status_code} - {response.reason}) while executing the command'
-            LOG.error(msg)
-            raise equinix_exc.EquinixRpcError(msg=response.text)
+                LOG.error('Unhandled error during processing the Equinix API request: %s', e)
 
-        try:
-            return response.json()
-        except ValueError:
-            msg = "Invalid JSON response from Equinix Metal API"
-            LOG.info(msg)
-            raise equinix_exc.EquinixRpcError(msg=msg)
+        # Handle the 204 No Content separately
+        if response.status_code == 204:
+            LOG.info('Received 204 No Content for URL %s. No response body to parse.', url)
+            return None  # 204 No Content means success with no body
+
+        # Handle other success statuses
+        if response.status_code in [requests.codes.ok, requests.codes.created]:
+            try:
+                return response.json()  # Attempt to parse the JSON response
+            except ValueError:
+                msg = "Invalid JSON response from Equinix Metal API"
+                LOG.error(msg)
+                raise equinix_exc.EquinixRpcError(msg=msg)
+        
+        # Handle unexpected statuses
+        msg = f'Error ({response.status_code} - {response.reason}) while executing the command: {response.text}'
+        LOG.error(msg)
+        raise equinix_exc.EquinixRpcError(msg=msg)

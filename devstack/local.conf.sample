@@ -1,12 +1,108 @@
-
 [[local|localrc]]
-enable_plugin networking-equinix https://github.com/codinja1188/networking-equinix.git master
+# Basic DevStack settings
+HOST_IP=86.109.3.49
+SERVICE_HOST=86.109.3.49
+MYSQL_HOST=86.109.3.49
+RABBIT_HOST=86.109.3.49
+GLANCE_HOSTPORT=86.109.3.49:9292
 
-# Specify the ML2 plugin and the mechanism driver for Equinix
-Q_PLUGIN=ml2
-Q_ML2_PLUGIN_MECHANISM_DRIVERS=openvswitch,equinix
+# Set Passwords
+ADMIN_PASSWORD=secret
+DATABASE_PASSWORD=secret
+RABBIT_PASSWORD=secret
+SERVICE_PASSWORD=secret
 
-# Set environment variables for Equinix Metal configuration
-EQUINIX_API_TOKEN=<your_token_here>
-EQUINIX_HOST=<your_host_here>
-EQUINIX_PROJECT_ID=<your_project_id_here>
+## Neutron options
+Q_USE_SECGROUP=True
+FLOATING_RANGE="86.109.3.0/24"
+IPV4_ADDRS_SAFE_TO_USE="10.0.0.0/24"
+Q_FLOATING_ALLOCATION_POOL=start=86.109.3.250,end=86.109.3.254
+PUBLIC_NETWORK_GATEWAY="86.109.3.1"
+PUBLIC_INTERFACE=bond0
+
+
+# Horizon (the web UI) is enabled by default. You may want to disable
+# it here to speed up DevStack a bit.
+enable_service horizon
+
+# Cinder (OpenStack Block Storage) is disabled by default to speed up
+# DevStack a bit. You may enable it here if you would like to use it.
+disable_service cinder c-sch c-api c-vol
+
+# Disable Tempest - The OpenStack Integration Test Suite.
+disable_service tempest
+
+# Disable OpenStack Swift - the object/blob store service.
+disable_service swift
+
+# Disable ML2 OVN plugin, driver and services
+disable_service ovn
+disable_service ovn-controller
+disable_service ovn-northd
+disable_service q-ovn-metadata-agent
+
+# Use openvswitch as the ml2 plugin driver
+Q_AGENT=openvswitch
+
+# Enable Neutron services neutron-server, neutron-openvswitch-agent,
+# neutron-dhcp-agent, neutron-l3-agent and neutron-metadata-agent
+enable_service q-svc
+enable_service q-agt
+enable_service q-dhcp
+enable_service q-l3
+enable_service q-meta
+
+# Enable your custom Neutron plugin for Equinix Metal from the main branch
+enable_plugin networking-equinix https://github.com/codinja1188/networking-equinix.git
+
+[[post-config|$NEUTRON_CONF]]
+[DEFAULT]
+debug = True
+verbose = True
+
+[[post-config|$NEUTRON_CONF]]
+[ml2_equinix]
+host = api.equinix.com
+api_token = xxxxxxxxxxxxxxxxxxxxx
+project_id = xxxx-xxxx-xxxx-xxxx-xxxx
+
+
+# Features available for ML2 OVS, uncomment to enforce DVR and L3 HA
+#router_distributed=True
+#l3_ha = True
+
+# You can add more config options here for neutron.conf
+# to achive more precise control of the functions for neutron server.
+
+[[post-config|/$Q_PLUGIN_CONF_FILE]]
+[ml2]
+type_drivers=flat,gre,vlan,vxlan
+tenant_network_types=vxlan
+#mechanism_drivers=openvswitch
+#mechanism_drivers=openvswitch,equinix
+mechanism_drivers=equinix
+
+[agent]
+tunnel_types=vxlan,gre
+
+# You can add more config options here for ml2_conf.ini, for instance
+# you can uncomment the followings to set the segment ID ranges for
+# various tenant network types.
+
+#[ml2_type_vxlan]
+#vni_ranges=1:10000
+
+#[ml2_type_flat]
+#flat_networks = *
+
+#[ml2_type_gre]
+#tunnel_id_ranges = 1:10000
+
+#[ml2_type_vlan]
+#network_vlan_ranges = tenant:2:3999
+
+# Logging and debug settings
+LOGFILE=/opt/stack/logs/stack.sh.log
+LOGDAYS=2
+VERBOSE=True
+DEBUG=True
