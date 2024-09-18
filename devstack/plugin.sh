@@ -14,7 +14,7 @@ function configure_networking_equinix {
     iniset $NEUTRON_CONF DEFAULT core_plugin neutron.plugins.ml2.plugin.Ml2Plugin
     iniset $NEUTRON_CONF DEFAULT service_plugins networking_equinix.plugins.equinix_plugin.EquinixPlugin
 
-    # Define the source and destination for the configuration file
+    # Copy configuration file
     local src_conf_file=$NETWORKING_EQUINIX_DIR/etc/networking_equinix.conf
     local dest_conf_dir=/etc/networking-equinix/
     local dest_conf_file=$dest_conf_dir/networking_equinix.conf
@@ -27,6 +27,7 @@ function configure_networking_equinix {
 
     echo "Copied configuration file to $dest_conf_file"
 }
+
 
 if is_service_enabled q-svc; then
     if [[ "$1" == "stack" && "$2" == "install" ]]; then

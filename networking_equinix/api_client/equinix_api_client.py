@@ -8,6 +8,7 @@ from oslo_utils import excutils
 from six.moves.urllib import parse
 
 from networking_equinix.common import exceptions as equinix_exc
+from networking_equinix.common.exceptions import EquinixRpcError
 
 LOG = logging.getLogger(__name__)
 
@@ -64,9 +65,10 @@ class EquinixAPIClient:
         except Exception as e:
             with excutils.save_and_reraise_exception():
                 LOG.warning('Error during processing the Equinix API request: %s', e)
-        
-        if response.status_code != requests.codes.ok:
-            msg = f'Error ({response.status_code} - {response.reason}) while executing the command'
+
+        # Handle 200 OK and 201 Created as valid responses
+        if response.status_code not in [requests.codes.ok, requests.codes.created]:
+            msg = f'Error ({response.status_code} - {response.reason}) while executing the command: {response.text}'
             LOG.error(msg)
             raise equinix_exc.EquinixRpcError(msg=response.text)
 
@@ -75,4 +77,4 @@ class EquinixAPIClient:
         except ValueError:
             msg = "Invalid JSON response from Equinix Metal API"
             LOG.info(msg)
-            raise equinix_exc.EquinixRpcError(msg=msg)
+            raise equinix_exc.EquinixRpcError(msg=msg))
