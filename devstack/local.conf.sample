@@ -59,6 +59,7 @@ enable_plugin networking-equinix https://github.com/codinja1188/networking-equin
 [DEFAULT]
 debug = True
 verbose = True
+service_plugins = networking_equinix.plugins.equinix_l3_plugin.EquinixL3RouterPlugin
 
 [[post-config|$NEUTRON_CONF]]
 [ml2_equinix]

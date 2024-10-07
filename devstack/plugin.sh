@@ -14,7 +14,7 @@ function configure_networking_equinix {
 
     # Configure the core and service plugins
     iniset $NEUTRON_CONF DEFAULT core_plugin neutron.plugins.ml2.plugin.Ml2Plugin
-    iniset $NEUTRON_CONF DEFAULT service_plugins "router,networking_equinix.plugins.equinix_l3_plugin.EquinixL3RouterPlugin"
+    iniset $NEUTRON_CONF DEFAULT service_plugins networking_equinix.plugins.equinix_l3_plugin.EquinixL3RouterPlugin
 
     # Set up the ML2 mechanism drivers to include equinix
     iniset $NEUTRON_CONF ml2 mechanism_drivers equinix
