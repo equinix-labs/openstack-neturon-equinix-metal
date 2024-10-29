@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `networking-equinix` plugin integrates OpenStack Neutron with [Equinix Metal](https://metal.equinix.com/), enabling management of network resources such as IP address ranges and VLANs directly through OpenStack.
+The `openstack-neutron-equinix-metal` plugin demonstrates how to integrate OpenStack Neutron with [Equinix Metal](https://deploy.equinix.com/product/bare-metal/), enabling management of network resources such as IP address ranges and VLANs directly through OpenStack.
 
 ## Features
 
@@ -16,12 +16,12 @@ The `networking-equinix` plugin integrates OpenStack Neutron with [Equinix Metal
 
 ## Installation
 
-To install the `networking-equinix` plugin, enable it in your DevStack environment.
+To install the `openstack-neutron-equinix-metal` plugin, enable it in your DevStack environment.
 
 1. Add the following line to your `local.conf` file:
 
     ```bash
-    enable_plugin networking-equinix https://github.com/codinja1188/networking-equinix.git
+    enable_plugin openstack-neutron-equinix-metal https://github.com/equinix-labs/openstack-neutron-equinix-metal.git
     ```
 
     ```bash
@@ -43,4 +43,4 @@ To install the `networking-equinix` plugin, enable it in your DevStack environme
     mechanism_drivers=equinix
     ```
 
-2. Run `stack.sh` to deploy OpenStack with the `networking-equinix` plugin enabled.
+2. Run `stack.sh` to deploy OpenStack with the `openstack-neutron-equinix-metal` plugin enabled.

@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name='networking-equinix',
+    name='openstack-neutron-equinix-metal',
     version='0.2',
     packages=setuptools.find_packages(),
     install_requires=[

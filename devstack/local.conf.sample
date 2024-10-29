@@ -53,7 +53,7 @@ enable_service q-l3
 enable_service q-meta
 
 # Enable your custom Neutron plugin for Equinix Metal from the main branch
-enable_plugin networking-equinix https://github.com/codinja1188/networking-equinix.git
+enable_plugin openstack-neutron-equinix-metal https://github.com/equinix-labs/openstack-neutron-equinix-metal.git
 
 [[post-config|$NEUTRON_CONF]]
 [DEFAULT]

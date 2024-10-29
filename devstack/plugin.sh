@@ -1,7 +1,7 @@
-# networking-equinix/devstack/plugin.sh
+# openstack-neutron-equinix-metal/devstack/plugin.sh
 
-# Define the directory where the networking-equinix plugin is located
-NETWORKING_EQUINIX_DIR=/opt/stack/networking-equinix
+# Define the directory where the openstack-neutron-equinix-metal plugin is located
+NETWORKING_EQUINIX_DIR=/opt/stack/openstack-neutron-equinix-metal
 
 function install_networking_equinix {
     echo "Installing Equinix Metal Neutron Plugin"
