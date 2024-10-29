@@ -16,7 +16,7 @@ The `openstack-neutron-equinix-metal` plugin demonstrates how to integrate OpenS
 
 ## Installation
 
-To install the `openstack-neutron-equinix-metal` plugin, enable it in your DevStack environment.
+To install the `openstack-neutron-equinix-metal` [OpenStack/DevStack plugin](https://docs.openstack.org/devstack/latest/plugins.html), enable it in your [DevStack environment](https://docs.openstack.org/devstack/latest/).
 
 1. Add the following line to your `local.conf` file:
 
