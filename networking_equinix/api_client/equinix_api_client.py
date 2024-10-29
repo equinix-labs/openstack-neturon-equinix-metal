@@ -23,6 +23,7 @@ class EquinixAPIClient:
         self.session = requests.Session()
         self.session.headers['Content-Type'] = 'application/json'
         self.session.headers['Accept'] = 'application/json'
+        self.session.headers['User-Agent'] = 'openstack-neutron-equinix-metal/0.1.1'
         self.session.headers['X-Auth-Token'] = api_token
         self.session.verify = verify
 
